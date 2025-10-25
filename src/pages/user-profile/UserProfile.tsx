@@ -11,7 +11,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useGetCurrentUser } from "@/hooks/useUser";
-import { useUpdateUser } from "@/hooks/useUser";
 import {
   Form,
   FormControl,
