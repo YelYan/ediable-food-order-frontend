@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 export const queryKeys = {
   all: ["my-restaurant"] as const,
   myrestaurant: () => [...queryKeys.all, "current"] as const,
-  myrestaurantById: (id: string) => [...queryKeys.all, id] as const,
 };
 
 export const useCurrentMyRestaurant = () => {
@@ -41,30 +40,30 @@ export const useCreateMyRestaurant = () => {
 }
 
 
-// export const useUpdateUser = () => {
-//   const queryClient = useQueryClient();
+export const useUpdateMyRestaurant = () => {
+  const queryClient = useQueryClient();
 
 
-//   return useMutation({
-//     mutationFn : (userData: User) => {
-//       return userApi.updateCurrentUser(userData);
-//     },
-//     onSuccess : (data) => {
-//       queryClient.setQueryData(queryKeys.user(), data);
-//       queryClient.invalidateQueries({ queryKey: queryKeys.user() });
-//       toast.success("User Profile updated successfully!");
-//     },
-//     onError: (error: any) => {
-//         console.error("Error updating user:", error);
-//         toast.error(error.response?.data?.error || "Failed to update user profile");
-//     },
-//   })
-// }
+  return useMutation({
+    mutationFn : (restaurantFormData: FormData) => {
+      return myRestaurantApi.updateMyRestaurant(restaurantFormData);
+    },
+    onSuccess : (data) => {
+      queryClient.setQueryData(queryKeys.myrestaurant(), data);
+      queryClient.invalidateQueries({ queryKey: queryKeys.myrestaurant() });
+      toast.success("Restaurant updated successfully!");
+    },
+    onError: (error: any) => {
+        console.error("Error updating user:", error);
+        toast.error(error.response?.data?.error || "Failed to update restaurant");
+    },
+  })
+}
 
 export const useMyRestaurant = () => {
     const { data : myrestaurant  } = useCurrentMyRestaurant();
     const createMyRestaurantMutation = useCreateMyRestaurant();
-    //   const updateUserMutation = useUpdateUser()
+      const updateMyRestaurantMutation = useUpdateMyRestaurant()
 
       return {
         // Create my restaurant functions
@@ -76,9 +75,7 @@ export const useMyRestaurant = () => {
         
 
         // update user functions
-        // updateUser : updateUserMutation.mutate,
-        // updateUserAsync: updateUserMutation.mutateAsync,
-        // isUpdatingUser: updateUserMutation.isPending,
-        // updateUserError: updateUserMutation.error,
+        updateMyRestaurant : updateMyRestaurantMutation.mutate,
+        isUpdatingResstaurant: updateMyRestaurantMutation.isPending,
       }
 }

@@ -3,10 +3,15 @@ import ManageRestaurantForm from "@/components/forms/ManageRestaurantForm";
 import { useMyRestaurant } from "@/hooks/useMyRestaurant";
 
 const ManageRestaurant = () => {
-  const { isCreatingmyRestaurant, createMyRestaurant, myrestaurant } =
-    useMyRestaurant();
+  const {
+    isCreatingmyRestaurant,
+    createMyRestaurant,
+    myrestaurant,
+    updateMyRestaurant,
+    isUpdatingResstaurant,
+  } = useMyRestaurant();
 
-  // const isEditing = !!myrestaurant;
+  const isEditing = !!myrestaurant;
 
   return (
     <Tabs defaultValue="orders" defaultChecked={true}>
@@ -18,8 +23,8 @@ const ManageRestaurant = () => {
       <TabsContent value="manage-restaurant">
         <ManageRestaurantForm
           restaurant={myrestaurant}
-          onSave={createMyRestaurant}
-          isLoading={isCreatingmyRestaurant}
+          onSave={isEditing ? updateMyRestaurant : createMyRestaurant}
+          isLoading={isCreatingmyRestaurant || isUpdatingResstaurant}
         />
       </TabsContent>
     </Tabs>

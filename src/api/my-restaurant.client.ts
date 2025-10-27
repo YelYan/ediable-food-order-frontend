@@ -9,5 +9,9 @@ export const myRestaurantApi = {
     getMyRestaurant : async() => {
         const  { data} = await axiosInstance.get("/my/restaurant");
         return data.restaurant || data.data!;
+    },
+    updateMyRestaurant : async (restaurantFormData : FormData) => {
+        const { data } = await axiosInstance.put<ApiResponse<Restaurant>>("/my/restaurant" , restaurantFormData);
+        return data.restaurant || data.data!;
     }
 } 
