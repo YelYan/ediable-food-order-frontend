@@ -154,11 +154,6 @@ export default function Header() {
                       Sign In
                     </Button>
                   </Link>
-                  <Link to="/register">
-                    <Button variant={"primary"} size="sm">
-                      Get Started
-                    </Button>
-                  </Link>
                 </div>
               </>
             )}
@@ -208,11 +203,6 @@ function MobileNav({
 }) {
   const navigate = useNavigate();
   const { loginWithRedirect } = useAuth0();
-
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    onClose();
-  };
 
   return (
     <div className="flex flex-col h-full p-2 gap-4">
@@ -276,13 +266,6 @@ function MobileNav({
               >
                 <LogIn className="mr-2 h-4 w-4" />
                 Sign In
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => handleNavigation("/register")}
-              >
-                Get Started
               </Button>
             </div>
           </>
