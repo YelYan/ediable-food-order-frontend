@@ -10,17 +10,17 @@ export const queryKeys = {
   myrestaurantById: (id: string) => [...queryKeys.all, id] as const,
 };
 
-// export const useGetCurrentUser = () => {
-//   const {user: auth0User, isLoading: auth0Loading} = useAuth0();
-//   return (
-//     useQuery({
-//       queryKey : queryKeys.user(),
-//       queryFn : userApi.getCurrentUser,
-//       enabled : !!auth0User && !auth0Loading, // Only fetch when authenticated
-//       staleTime: Infinity, // User data doesn't change often,
-//     })
-//   )
-// }
+export const useCurrentMyRestaurant = () => {
+  const {user: auth0User, isLoading: auth0Loading} = useAuth0();
+  return (
+    useQuery({
+      queryKey : queryKeys.myrestaurant(),
+      queryFn : myRestaurantApi.getMyRestaurant,
+      enabled : !!auth0User && !auth0Loading, // Only fetch when authenticated
+      staleTime: Infinity, // User data doesn't change often,
+    })
+  )
+}
 
 export const useCreateMyRestaurant = () => {
     const queryClient = useQueryClient();
@@ -62,24 +62,23 @@ export const useCreateMyRestaurant = () => {
 // }
 
 export const useMyRestaurant = () => {
-//   const {data: user , isLoading , error} = useGetCurrentUser()
-      const createMyRestaurantMutation = useCreateMyRestaurant();
+    const { data : myrestaurant  } = useCurrentMyRestaurant();
+    const createMyRestaurantMutation = useCreateMyRestaurant();
     //   const updateUserMutation = useUpdateUser()
 
       return {
-        // Create user functions
+        // Create my restaurant functions
         createMyRestaurant : createMyRestaurantMutation.mutate,
         isCreatingmyRestaurant: createMyRestaurantMutation.isPending,
+
+        // get my restaurant
+        myrestaurant,
+        
 
         // update user functions
         // updateUser : updateUserMutation.mutate,
         // updateUserAsync: updateUserMutation.mutateAsync,
         // isUpdatingUser: updateUserMutation.isPending,
         // updateUserError: updateUserMutation.error,
-
-        // get current user
-        // user,
-        // isLoading, 
-        // error
       }
 }
