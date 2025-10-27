@@ -10,6 +10,7 @@ const LazyAuthCallback = lazy(() => import("./pages/auth/AuthCallbackPage"));
 const LazyManageRestaurant = lazy(
   () => import("./pages/restaurant/ManageRestaurant")
 );
+const LazySearchPage = lazy(() => import("./pages/search/SearchPage"));
 
 const loadFunction = () => {
   return <FullPageLoader text="Loading..." />;
@@ -24,6 +25,14 @@ const AppRoutes = () => {
           element={
             <Suspense fallback={loadFunction()}>
               <LazyHome />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <Suspense fallback={loadFunction()}>
+              <LazySearchPage />
             </Suspense>
           }
         />
