@@ -7,6 +7,9 @@ import ProtectedRoutes from "./auth/ProtectedRoutes";
 const LazyHome = lazy(() => import("./pages/home/Home"));
 const LazyUserProfile = lazy(() => import("./pages/user-profile/UserProfile"));
 const LazyAuthCallback = lazy(() => import("./pages/auth/AuthCallbackPage"));
+const LazyManageRestaurant = lazy(
+  () => import("./pages/restaurant/ManageRestaurant")
+);
 
 const loadFunction = () => {
   return <FullPageLoader text="Loading..." />;
@@ -38,6 +41,14 @@ const AppRoutes = () => {
             element={
               <Suspense fallback={loadFunction()}>
                 <LazyUserProfile />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/manage-restaurant"
+            element={
+              <Suspense fallback={loadFunction()}>
+                <LazyManageRestaurant />
               </Suspense>
             }
           />

@@ -17,9 +17,9 @@ export const setupAuthInterceptor = (tokenGetter: () => Promise<string>) => {
 const axiosInstance: AxiosInstance = axios.create({
     baseURL : API_URL,
     timeout: 10000,
-    headers: {
-    "Content-Type": "application/json",
-  },
+  //   headers: {
+  //   "Content-Type": "application/json",
+  // },
 })
 
 
