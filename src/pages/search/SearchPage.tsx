@@ -13,6 +13,8 @@ import {
 import SearchInfo from "@/components/SearchInfo";
 import SearchOptions from "@/components/SearchOptions";
 import CuisineFilter from "@/components/CuisineFilter";
+import SearchCardResults from "@/components/SearchCardResults";
+import PaginationSelector from "@/components/PaginationSelector";
 
 export type SearchState = {
   searchQuery: string;
@@ -45,6 +47,13 @@ const SearchPage = () => {
     setSearchState((prev) => ({
       ...prev,
       sortOption: value,
+    }));
+  };
+
+  const onPageChange = (page: number) => {
+    setSearchState((prev) => ({
+      ...prev,
+      page,
     }));
   };
 
@@ -87,14 +96,24 @@ const SearchPage = () => {
           onExpandedClick={() => setIsExpanded((prev) => !prev)}
         />
       </div>
-      <div id="main-content" className="">
-        <div className="flex flex-col gap-4 md:flex-row justify-between">
+      <div id="main-content" className="space-y-4">
+        <div className="flex flex-col gap-4 md:flex-row justify-between md:items-center">
           <SearchInfo city={city} total={results.pagination.total} />
           <SearchOptions
             onChange={handleSortOption}
             sortOption={searchState.sortOption}
           />
         </div>
+
+        {results.data.map((restaurant) => (
+          <SearchCardResults restaurant={restaurant} />
+        ))}
+
+        <PaginationSelector
+          page={results.pagination.page}
+          pages={results.pagination.pages}
+          onPageChange={onPageChange}
+        />
       </div>
     </div>
   );
