@@ -116,7 +116,7 @@ export default function SearchBarMobile({
             >
               Clear
             </Button>
-            <Button type="submit" variant="default" className="flex-1">
+            <Button type="submit" variant="primary" className="flex-1">
               <Search className="mr-2 h-4 w-4" />
               Search
             </Button>

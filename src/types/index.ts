@@ -30,7 +30,7 @@ export interface ApiResponse<T = any> {
   errors?: Array<{ msg: string; param: string }>;
 }
 
-type MenuItem = {name : string ; price : number}
+export type MenuItem = {name : string ; price : number}
 
 export type Restaurant = {
   _id: string;

@@ -11,6 +11,9 @@ const LazyManageRestaurant = lazy(
   () => import("./pages/restaurant/ManageRestaurant")
 );
 const LazySearchPage = lazy(() => import("./pages/search/SearchPage"));
+const LazyDetailsRestaurant = lazy(
+  () => import("./pages/details/DetailsRestaurant")
+);
 
 const loadFunction = () => {
   return <FullPageLoader text="Loading..." />;
@@ -33,6 +36,14 @@ const AppRoutes = () => {
           element={
             <Suspense fallback={loadFunction()}>
               <LazySearchPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/details/:restaurantId"
+          element={
+            <Suspense fallback={loadFunction()}>
+              <LazyDetailsRestaurant />
             </Suspense>
           }
         />

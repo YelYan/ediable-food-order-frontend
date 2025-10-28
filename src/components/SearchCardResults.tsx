@@ -6,7 +6,7 @@ import { Banknote, Clock, Dot } from "lucide-react";
 
 const SearchCardResults = ({ restaurant }: { restaurant: Restaurant }) => {
   return (
-    <Link to={"/"}>
+    <Link to={`/details/${restaurant._id}`}>
       <Card>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center">
           <AspectRatio ratio={19 / 8}>
@@ -18,7 +18,7 @@ const SearchCardResults = ({ restaurant }: { restaurant: Restaurant }) => {
 
           <div className="col-span-2 flex flex-col md:flex-row items-center gap-8">
             <div id="card-content" className="flex flex-col">
-              <h3 className="text-2xl font-bold tracking-tight mb-2 group-hover:underline">
+              <h3 className="text-2xl font-bold tracking-tight mb-2 hover:underline">
                 {restaurant.restaurantName}
               </h3>
               <div className="flex flex-row flex-wrap">

@@ -104,7 +104,7 @@ export default function SearchBar({
           />
           <Button
             type="submit"
-            variant="default"
+            variant="primary"
             className="px-6 transition-all duration-200 hover:scale-105"
           >
             Search
