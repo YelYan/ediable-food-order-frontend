@@ -45,3 +45,12 @@ export type Restaurant = {
   imageUrl: string;
   lastUpdated: string;
 };
+
+export type RestaurantResponse = {
+  data : Restaurant[];
+  pagination : {
+    total : number;
+    page : number;
+    pages : number
+  }
+}

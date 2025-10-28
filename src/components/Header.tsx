@@ -33,7 +33,10 @@ export default function Header() {
   };
 
   const handleSearch = (query: string) => {
-    navigate(`/search?q=${encodeURIComponent(query)}`);
+    // navigate(`/search?q=${encodeURIComponent(query)}`);
+    navigate({
+      pathname: `/search/${encodeURIComponent(query)}`,
+    });
   };
 
   return (
@@ -181,7 +184,10 @@ function MobileNav({
   const { loginWithRedirect } = useAuth0();
 
   const handleSearch = (query: string) => {
-    navigate(`/search?q=${encodeURIComponent(query)}`);
+    // navigate(`/search?q=${encodeURIComponent(query)}`);
+    navigate({
+      pathname: `/search/${encodeURIComponent(query)}`,
+    });
     onClose();
   };
 

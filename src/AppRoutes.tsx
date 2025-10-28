@@ -29,7 +29,7 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/search"
+          path="/search/:city"
           element={
             <Suspense fallback={loadFunction()}>
               <LazySearchPage />
