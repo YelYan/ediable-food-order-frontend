@@ -5,7 +5,6 @@ import { Link } from "react-router";
 import { Banknote, Clock, Dot } from "lucide-react";
 
 const SearchCardResults = ({ restaurant }: { restaurant: Restaurant }) => {
-  console.log(restaurant);
   return (
     <Link to={"/"}>
       <Card>

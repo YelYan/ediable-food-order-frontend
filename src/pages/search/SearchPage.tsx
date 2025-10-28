@@ -16,7 +16,7 @@ import CuisineFilter from "@/components/CuisineFilter";
 import SearchCardResults from "@/components/SearchCardResults";
 import PaginationSelector from "@/components/PaginationSelector";
 
-export type SearchState = {
+export type SearchStateT = {
   searchQuery: string;
   page: number;
   selectedCuisines: string[];
@@ -25,7 +25,7 @@ export type SearchState = {
 
 const SearchPage = () => {
   const { city } = useParams<{ city: string }>();
-  const [searchState, setSearchState] = useState<SearchState>({
+  const [searchState, setSearchState] = useState<SearchStateT>({
     searchQuery: "",
     page: 1,
     selectedCuisines: [],
@@ -33,7 +33,10 @@ const SearchPage = () => {
   });
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-  const { data: results, isLoading } = useSearchRestaurant(city || "");
+  const { data: results, isLoading } = useSearchRestaurant(
+    searchState,
+    city || ""
+  );
 
   const handleCusiineChange = (selectedCuisines: string[]) => {
     setSearchState((prev) => ({

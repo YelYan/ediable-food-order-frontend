@@ -20,7 +20,6 @@ const CuisineFilter = ({
   const handleCuisinesReset = () => onChange([]);
 
   const handleCuisinesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     const clickedCuisine = e.target.value;
     const isChecked = e.target.checked;
 
