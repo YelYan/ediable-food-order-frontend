@@ -1,7 +1,17 @@
 import { useState } from "react";
+import { ShoppingBag } from "lucide-react";
 import { useParams } from "react-router";
 import { useSearchRestaurant } from "@/hooks/useRestaurant";
 import LoadingSpinner from "@/components/ui/loading";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
+import SearchInfo from "@/components/SearchInfo";
+import SearchOptions from "@/components/SearchOptions";
 import CuisineFilter from "@/components/CuisineFilter";
 
 export type SearchState = {
@@ -31,6 +41,13 @@ const SearchPage = () => {
     }));
   };
 
+  const handleSortOption = (value: string) => {
+    setSearchState((prev) => ({
+      ...prev,
+      sortOption: value,
+    }));
+  };
+
   if (!city) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
@@ -47,8 +64,21 @@ const SearchPage = () => {
     );
   }
 
+  if (!results?.data || !city) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ShoppingBag />
+          </EmptyMedia>
+          <EmptyTitle>No restaurants found Yet</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr]">
+    <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-8">
       <div id="cuisine-list" className="">
         <CuisineFilter
           selectedCuisines={searchState.selectedCuisines}
@@ -58,7 +88,13 @@ const SearchPage = () => {
         />
       </div>
       <div id="main-content" className="">
-        search card
+        <div className="flex flex-col gap-4 md:flex-row justify-between">
+          <SearchInfo city={city} total={results.pagination.total} />
+          <SearchOptions
+            onChange={handleSortOption}
+            sortOption={searchState.sortOption}
+          />
+        </div>
       </div>
     </div>
   );
