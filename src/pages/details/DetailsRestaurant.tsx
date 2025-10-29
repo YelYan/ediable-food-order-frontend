@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router";
 import { useGetRestaurant } from "@/hooks/useRestaurant";
+import { useOrder } from "@/hooks/useOrder";
 import { ShoppingBag } from "lucide-react";
 import LoadingSpinner from "@/components/ui/loading";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -36,6 +37,8 @@ const DetailsRestaurant = () => {
   const { data: restaurant, isLoading } = useGetRestaurant(
     restaurantId as string
   );
+
+  const { createCheckoutSession, isCreatingCheckoutSession } = useOrder();
 
   const addToCart = (menuItem: MenuItem) => {
     setCartItems((prevCartItems) => {
@@ -83,8 +86,27 @@ const DetailsRestaurant = () => {
     });
   };
 
-  const onCheckOut = (userFormData: ProfileFormValues) => {
-    console.log(userFormData);
+  const onCheckOut = async (userFormData: ProfileFormValues) => {
+    if (!restaurant) return;
+
+    const checkOutData = {
+      cartItems: cartItems.map((cartItem) => ({
+        menuItemId: cartItem._id,
+        name: cartItem.name,
+        quantity: cartItem.quantity.toString(),
+      })),
+      restaurantId: restaurant._id,
+      deliveryDetails: {
+        name: userFormData.name ?? "",
+        addressLine1: userFormData.addressLine1 ?? "",
+        city: userFormData.city ?? "",
+        country: userFormData.country ?? "",
+        email: userFormData.email ?? "",
+      },
+    };
+
+    const data = await createCheckoutSession(checkOutData);
+    window.location.href = data.url;
   };
 
   if (isLoading) {
@@ -140,6 +162,7 @@ const DetailsRestaurant = () => {
             <CheckOutBtn
               disabled={cartItems.length === 0}
               onCheckOut={onCheckOut}
+              isLoading={isCreatingCheckoutSession}
             />
           </CardFooter>
         </Card>

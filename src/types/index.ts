@@ -53,3 +53,19 @@ export type RestaurantResponse = {
     pages: number
   }
 }
+
+export type CheckoutSessionRequest = {
+    cartItems : {
+        menuItemId : string;
+        name : string;
+        quantity : string;
+    }[];
+    deliveryDetails : {
+        email : string;
+        name : string;
+        city : string;
+        addressLine1 : string;
+        country : string
+    }
+    restaurantId : string
+}

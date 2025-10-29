@@ -4,7 +4,6 @@ import { Button } from "./ui/button";
 import { useAuth0 } from "@auth0/auth0-react";
 import LoadingSpinner from "./ui/loading";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,6 +20,7 @@ import { useGetCurrentUser } from "@/hooks/useUser";
 
 // Zod validation schema
 const profileFormSchema = z.object({
+  email: z.string().email().optional(),
   name: z
     .string()
     .max(50, "Name must be less than 50 characters")
@@ -48,9 +48,10 @@ export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 type Props = {
   onCheckOut: (userFormData: ProfileFormValues) => void;
   disabled: boolean;
+  isLoading: boolean;
 };
 
-const CheckOutBtn = ({ disabled }: Props) => {
+const CheckOutBtn = ({ disabled, onCheckOut, isLoading }: Props) => {
   const {
     isAuthenticated,
     isLoading: auth0Loading,
@@ -62,6 +63,7 @@ const CheckOutBtn = ({ disabled }: Props) => {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
+      email: currentUser?.email || "",
       name: "",
       addressLine1: "",
       city: "",
@@ -71,7 +73,7 @@ const CheckOutBtn = ({ disabled }: Props) => {
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
-    console.log(data);
+    onCheckOut(data);
   };
 
   // after user login in details page , we will redirect to details
@@ -91,7 +93,7 @@ const CheckOutBtn = ({ disabled }: Props) => {
     );
   }
 
-  if (auth0Loading || !currentUser) {
+  if (auth0Loading || !currentUser || isLoading) {
     return <LoadingSpinner type="simple" />;
   }
 
@@ -110,19 +112,30 @@ const CheckOutBtn = ({ disabled }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Field */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <Mail className="w-4 h-4" />
-                <span>Email Address</span>
-              </Label>
-              <Input
-                type="email"
-                value={currentUser?.email}
-                disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
-              />
-              <p className="text-xs text-gray-500">Email cannot be changed</p>
-            </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <Mail className="w-4 h-4" />
+                    <span>Email Address</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="email"
+                      value={currentUser?.email}
+                      disabled
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
+                    />
+                  </FormControl>
+                  <p className="text-xs text-gray-500">
+                    Email cannot be changed
+                  </p>
+                </FormItem>
+              )}
+            />
 
             {/* Name Field */}
             <FormField
@@ -204,7 +217,7 @@ const CheckOutBtn = ({ disabled }: Props) => {
                 )}
               />
             </div>
-            <Button type="submit" variant={"primary"}>
+            <Button disabled={isLoading} type="submit" variant={"primary"}>
               Confirm Payment
             </Button>
           </form>
