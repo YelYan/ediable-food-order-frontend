@@ -7,7 +7,6 @@ export interface CreateUserRequest {
   country?: string;
 }
 
-
 export interface User {
   _id?: string;
   auth0Id?: string;
@@ -30,7 +29,7 @@ export interface ApiResponse<T = any> {
   errors?: Array<{ msg: string; param: string }>;
 }
 
-export type MenuItem = {name : string ; price : number}
+export type MenuItem = { _id: string; name: string; price: number }
 
 export type Restaurant = {
   _id: string;
@@ -47,10 +46,10 @@ export type Restaurant = {
 };
 
 export type RestaurantResponse = {
-  data : Restaurant[];
-  pagination : {
-    total : number;
-    page : number;
-    pages : number
+  data: Restaurant[];
+  pagination: {
+    total: number;
+    page: number;
+    pages: number
   }
 }

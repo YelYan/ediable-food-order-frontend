@@ -16,6 +16,8 @@ import RestaurantInfo from "@/components/RestaurantInfo";
 import MenuItemCom from "@/components/MenuItem";
 import OrderSummary from "@/components/OrderSummary";
 import CheckOutBtn from "@/components/CheckOutBtn";
+import type { MenuItem } from "@/types";
+import type { ProfileFormValues } from "@/components/CheckOutBtn";
 
 export type CartItem = {
   _id: string;
@@ -26,18 +28,63 @@ export type CartItem = {
 
 const DetailsRestaurant = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
+    return storedCartItems ? JSON.parse(storedCartItems) : [];
+  });
 
   const { data: restaurant, isLoading } = useGetRestaurant(
     restaurantId as string
   );
 
-  const addToCart = () => {
-    console.log("add to cart");
+  const addToCart = (menuItem: MenuItem) => {
+    setCartItems((prevCartItems) => {
+      const existing = prevCartItems.find((ci) => ci._id === menuItem._id);
+      if (existing) {
+        return prevCartItems.map((ci) =>
+          ci._id === menuItem._id ? { ...ci, quantity: ci.quantity + 1 } : ci
+        );
+      }
+
+      sessionStorage.setItem(
+        `cartItems-${restaurantId}`,
+        JSON.stringify([
+          ...prevCartItems,
+          {
+            _id: menuItem._id,
+            name: menuItem.name,
+            price: menuItem.price,
+            quantity: 1,
+          },
+        ])
+      );
+      return [
+        ...prevCartItems,
+        {
+          _id: menuItem._id,
+          name: menuItem.name,
+          price: menuItem.price,
+          quantity: 1,
+        },
+      ];
+    });
   };
 
-  const removeFromCart = () => {
-    console.log("remove");
+  const removeFromCart = (cartItem: CartItem) => {
+    setCartItems((prevCartItem) => {
+      const updatedCartItems = prevCartItem.filter(
+        (item) => item._id !== cartItem._id
+      );
+      sessionStorage.setItem(
+        `cartItems-${restaurantId}`,
+        JSON.stringify(updatedCartItems)
+      );
+      return updatedCartItems;
+    });
+  };
+
+  const onCheckOut = (userFormData: ProfileFormValues) => {
+    console.log(userFormData);
   };
 
   if (isLoading) {
@@ -77,7 +124,7 @@ const DetailsRestaurant = () => {
               <MenuItemCom
                 key={index}
                 menuItem={menuItem}
-                addToCart={addToCart}
+                addToCart={() => addToCart(menuItem)}
               />
             ))}
           </div>
@@ -90,7 +137,10 @@ const DetailsRestaurant = () => {
             removeFromCart={removeFromCart}
           />
           <CardFooter>
-            <CheckOutBtn />
+            <CheckOutBtn
+              disabled={cartItems.length === 0}
+              onCheckOut={onCheckOut}
+            />
           </CardFooter>
         </Card>
       </div>
