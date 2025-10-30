@@ -20,7 +20,7 @@ import { useGetCurrentUser } from "@/hooks/useUser";
 
 // Zod validation schema
 const profileFormSchema = z.object({
-  email: z.string().email().optional(),
+  email: z.string().optional(),
   name: z
     .string()
     .max(50, "Name must be less than 50 characters")

@@ -19,6 +19,7 @@ import OrderSummary from "@/components/OrderSummary";
 import CheckOutBtn from "@/components/CheckOutBtn";
 import type { MenuItem } from "@/types";
 import type { ProfileFormValues } from "@/components/CheckOutBtn";
+import { useGetCurrentUser } from "@/hooks/useUser";
 
 export type CartItem = {
   _id: string;
@@ -39,6 +40,7 @@ const DetailsRestaurant = () => {
   );
 
   const { createCheckoutSession, isCreatingCheckoutSession } = useOrder();
+  const { data: currentUser } = useGetCurrentUser();
 
   const addToCart = (menuItem: MenuItem) => {
     setCartItems((prevCartItems) => {
@@ -101,7 +103,7 @@ const DetailsRestaurant = () => {
         addressLine1: userFormData.addressLine1 ?? "",
         city: userFormData.city ?? "",
         country: userFormData.country ?? "",
-        email: userFormData.email ?? "",
+        email: currentUser?.email ?? "",
       },
     };
 
