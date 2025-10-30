@@ -1,7 +1,8 @@
 import { orderApi } from "@/api/order.client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type { CheckoutSessionRequest } from "@/types";
 import toast from "react-hot-toast";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 export const queryKeys = {
@@ -9,8 +10,17 @@ export const queryKeys = {
     order : () => [...queryKeys.all, "current"] as const
 }
 
-export const useCreateCheckoutSession = () => {
+export const useGetMyOrder = () => {
+      const {user: auth0User, isLoading: auth0Loading} = useAuth0();
+    return useQuery({
+        queryKey : queryKeys.order(),
+        queryFn : orderApi.getMyOrder,
+        enabled : !!auth0User && !auth0Loading, // Only fetch when authenticated
+        staleTime: Infinity, // User data doesn't change often,
+    })
+}
 
+export const useCreateCheckoutSession = () => {
     return useMutation({
         mutationFn : (checkoutSessionRequest : CheckoutSessionRequest) => {
             return orderApi.createCheckoutSession(checkoutSessionRequest)

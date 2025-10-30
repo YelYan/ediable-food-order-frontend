@@ -11,7 +11,15 @@ import {
   SheetDescription,
   SheetHeader,
 } from "@/components/ui/sheet";
-import { Menu, LogOut, LogIn, BookOpen, User, ShoppingBag } from "lucide-react";
+import {
+  Menu,
+  LogOut,
+  LogIn,
+  BookOpen,
+  User,
+  ShoppingBag,
+  Package,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -101,6 +109,12 @@ export default function Header() {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => navigate("/order-status")}
+                      >
+                        <Package className="mr-2 h-4 w-4" />
+                        Order Status
+                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => navigate("/manage-restaurant")}
                       >
