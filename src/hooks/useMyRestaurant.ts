@@ -1,4 +1,5 @@
 import { myRestaurantApi } from "@/api/my-restaurant.client";
+import type { ApiResponse, OrderStatus, OrderT } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQueryClient , useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -7,6 +8,7 @@ import toast from "react-hot-toast";
 export const queryKeys = {
   all: ["my-restaurant"] as const,
   myrestaurant: () => [...queryKeys.all, "current"] as const,
+  orders: () => [...queryKeys.all, "my-restaurant-orders"] as const,
 };
 
 export const useCurrentMyRestaurant = () => {
@@ -15,6 +17,18 @@ export const useCurrentMyRestaurant = () => {
     useQuery({
       queryKey : queryKeys.myrestaurant(),
       queryFn : myRestaurantApi.getMyRestaurant,
+      enabled : !!auth0User && !auth0Loading, // Only fetch when authenticated
+      staleTime: Infinity, // User data doesn't change often,
+    })
+  )
+}
+
+export const useCurrentMyRestaurantOrder = () => {
+  const {user: auth0User, isLoading: auth0Loading} = useAuth0();
+  return (
+    useQuery<ApiResponse<OrderT[]>>({
+      queryKey : queryKeys.orders(),
+      queryFn : myRestaurantApi.getMyRestaurantOrders,
       enabled : !!auth0User && !auth0Loading, // Only fetch when authenticated
       staleTime: Infinity, // User data doesn't change often,
     })
@@ -60,10 +74,32 @@ export const useUpdateMyRestaurant = () => {
   })
 }
 
+export const useUpdateMyRestaurantOrderStatus = () => {
+    const queryClient = useQueryClient();
+  return (
+    useMutation({
+      mutationFn: ({orderId , status} : {orderId : string, status : OrderStatus}) => {
+        return myRestaurantApi.updateMyRestaurantOrdersStatus(orderId , status)
+      },
+    onSuccess : (data) => {
+      queryClient.setQueryData(queryKeys.orders(), data.data);
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders() });
+      toast.success(data?.message || "Order updated successfully!");
+    },
+    onError: (error: any) => {
+        console.error("Error updating order status:", error);
+        toast.error(error.response?.data?.error || "Failed to update order status");
+    }, 
+    })
+  )
+}
+
 export const useMyRestaurant = () => {
     const { data : myrestaurant  } = useCurrentMyRestaurant();
+    const {data : orders, isLoading: isGettingOrder } = useCurrentMyRestaurantOrder();
     const createMyRestaurantMutation = useCreateMyRestaurant();
-      const updateMyRestaurantMutation = useUpdateMyRestaurant()
+    const updateMyRestaurantMutation = useUpdateMyRestaurant()
+    const updateMyRestaurantOrdersStatusMutation = useUpdateMyRestaurantOrderStatus();
 
       return {
         // Create my restaurant functions
@@ -72,7 +108,14 @@ export const useMyRestaurant = () => {
 
         // get my restaurant
         myrestaurant,
-        
+
+        // get orders
+        orders,
+        isGettingOrder,
+
+        //update order status
+        updateOrderStatus :  updateMyRestaurantOrdersStatusMutation.mutateAsync,
+        isUpdatingOrderStatus : updateMyRestaurantOrdersStatusMutation.isPending,
 
         // update user functions
         updateMyRestaurant : updateMyRestaurantMutation.mutate,

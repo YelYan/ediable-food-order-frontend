@@ -49,14 +49,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up animation-delay-600">
+          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up animation-delay-600">
             <button className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
               Order Now
             </button>
             <button className="px-8 py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-300 border border-white/30">
               View Menu
             </button>
-          </div>
+          </div> */}
 
           {/* Features */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto animate-fade-in animation-delay-800">

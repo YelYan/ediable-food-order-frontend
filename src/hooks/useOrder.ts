@@ -16,7 +16,7 @@ export const useGetMyOrder = () => {
         queryKey : queryKeys.order(),
         queryFn : orderApi.getMyOrder,
         enabled : !!auth0User && !auth0Loading, // Only fetch when authenticated
-        staleTime: Infinity, // User data doesn't change often,
+        refetchInterval : 5000, // user does not have to referes browser ,they can check status
     })
 }
 
